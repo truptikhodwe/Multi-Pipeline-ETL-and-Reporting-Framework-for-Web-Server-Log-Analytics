@@ -1,0 +1,19 @@
+start-dfs.sh
+start-yarn.sh
+
+cd ~/Nosql_Project/mapreduce-pipeline
+
+hdfs dfs -rm -r /query1_out
+hdfs dfs -rm -r /query2_out
+hdfs dfs -rm -r /query3_out
+
+mvn clean package
+
+hadoop jar target/mapreduce-pipeline-1.0-SNAPSHOT.jar
+
+
+TRUNCATE query1_results;
+TRUNCATE query2_results;
+TRUNCATE query3_results;
+TRUNCATE batch_metadata;
+TRUNCATE run_metrics RESTART IDENTITY;
