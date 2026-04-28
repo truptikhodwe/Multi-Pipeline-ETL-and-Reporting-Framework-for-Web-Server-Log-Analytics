@@ -1,0 +1,9 @@
+com/etl/Main.class
+com/etl/model/LogRecord.class
+com/etl/util/LoggerUtil.class
+com/etl/db/PostgresWriter.class
+com/etl/model/ExecutionStats.class
+com/etl/util/BatchReader.class
+com/etl/report/ReportGenerator.class
+com/etl/parser/LogParser.class
+com/etl/controller/MongoPipeline.class

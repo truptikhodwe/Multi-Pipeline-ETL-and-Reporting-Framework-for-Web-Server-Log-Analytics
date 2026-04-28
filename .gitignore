@@ -1,0 +1,3 @@
+mongodb-pipeline/data/
+*.gz
+*.zip
