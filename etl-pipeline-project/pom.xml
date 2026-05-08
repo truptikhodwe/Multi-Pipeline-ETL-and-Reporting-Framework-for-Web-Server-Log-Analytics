@@ -51,23 +51,40 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.7.1</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.etl.Main</mainClass>
-                        </manifest>
-                    </archive>
-                    <finalName>etl-pipeline-1.0</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
                 <executions>
+                    <!-- Main fat JAR with Main-Class for java -jar -->
                     <execution>
                         <id>make-assembly</id>
                         <phase>package</phase>
                         <goals><goal>single</goal></goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>com.etl.Main</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>etl-pipeline-1.0</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                    <!-- MR JAR without Main-Class so hadoop jar respects the class argument -->
+                    <execution>
+                        <id>make-mr-assembly</id>
+                        <phase>package</phase>
+                        <goals><goal>single</goal></goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <!-- No mainClass entry so hadoop jar uses the class argument -->
+                            </archive>
+                            <finalName>etl-pipeline-mr</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

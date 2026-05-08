@@ -18,7 +18,8 @@ public class MapReducePipeline {
     private static final String OUTPUT = "/output";
     private static final String PIPELINE = "MapReduce";
     private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
-    private static final String JAR_PATH = "target/etl-pipeline-1.0.jar";
+    private static final String JAR_PATH = "target/etl-pipeline-1.0.jar"; // fat JAR for HADOOP_CLASSPATH
+    private static final String MR_JAR_PATH = "target/etl-pipeline-mr.jar"; // no Main-Class, used for hadoop jar
 
     private final String queryName;
     private final int batchSize;
@@ -126,7 +127,7 @@ public class MapReducePipeline {
         runCommand(
             String.format(
                 "hadoop jar %s com.etl.mapreduce.HadoopRunner %s %s %s %s",
-                JAR_PATH,
+                MR_JAR_PATH,
                 mapperClass,
                 reducerClass,
                 input,
