@@ -1,0 +1,26 @@
+Pig Stack Trace
+---------------
+ERROR 1200: <file src/main/resources/pig/query1.pig, line 19, column 98>  Unexpected character '"'
+
+org.apache.pig.impl.logicalLayer.FrontendException: ERROR 1000: Error during parsing. <file src/main/resources/pig/query1.pig, line 19, column 98>  Unexpected character '"'
+	at org.apache.pig.PigServer$Graph.parseQuery(PigServer.java:1841)
+	at org.apache.pig.PigServer$Graph.access$000(PigServer.java:1536)
+	at org.apache.pig.PigServer.parseAndBuild(PigServer.java:461)
+	at org.apache.pig.PigServer.executeBatch(PigServer.java:486)
+	at org.apache.pig.PigServer.executeBatch(PigServer.java:472)
+	at org.apache.pig.tools.grunt.GruntParser.executeBatch(GruntParser.java:172)
+	at org.apache.pig.tools.grunt.GruntParser.parseStopOnError(GruntParser.java:235)
+	at org.apache.pig.tools.grunt.GruntParser.parseStopOnError(GruntParser.java:206)
+	at org.apache.pig.tools.grunt.Grunt.exec(Grunt.java:81)
+	at org.apache.pig.Main.run(Main.java:630)
+	at org.apache.pig.Main.main(Main.java:175)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:333)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:254)
+Caused by: Failed to parse: <file src/main/resources/pig/query1.pig, line 19, column 98>  Unexpected character '"'
+	at org.apache.pig.parser.QueryParserDriver.parse(QueryParserDriver.java:246)
+	at org.apache.pig.parser.QueryParserDriver.parse(QueryParserDriver.java:182)
+	at org.apache.pig.PigServer$Graph.parseQuery(PigServer.java:1828)
+	... 14 more
+================================================================================
