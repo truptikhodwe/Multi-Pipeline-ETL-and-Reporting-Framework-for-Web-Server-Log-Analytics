@@ -20,7 +20,7 @@ import org.bson.Document;
  */
 public class MongoDBPipeline {
 
-    private static final String INPUT = "/input/logs";
+    private static final String INPUT_DIR = "/input/logs";
     private static final String PIPELINE = "MongoDB";
     private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
     private static final String MONGO_URI = "mongodb://localhost:27017";
@@ -118,6 +118,14 @@ public class MongoDBPipeline {
         int total = 0,
             valid = 0;
 
+        // Resolve the correct HDFS path based on batchId
+        String hdfsInput =
+            batchId == 1
+                ? INPUT_DIR + "/NASA_access_log_Jul95"
+                : batchId == 2
+                    ? INPUT_DIR + "/NASA_access_log_Aug95"
+                    : INPUT_DIR + "/*"; // combined
+
         try (MongoClient mc = MongoClients.create(MONGO_URI)) {
             MongoDatabase db = mc.getDatabase(MONGO_DB);
 
@@ -134,7 +142,7 @@ public class MongoDBPipeline {
             ProcessBuilder pb = new ProcessBuilder(
                 "bash",
                 "-c",
-                "hdfs dfs -cat " + INPUT + "/*"
+                "hdfs dfs -cat " + hdfsInput
             );
             pb.environment().put("HADOOP_HOME", HADOOP_HOME);
             pb
@@ -145,6 +153,22 @@ public class MongoDBPipeline {
                 );
             pb.redirectErrorStream(false);
             Process proc = pb.start();
+
+            // Drain stderr in a separate thread so it doesn't block stdout
+            StringBuilder stderrBuf = new StringBuilder();
+            Thread stderrThread = new Thread(() -> {
+                try (
+                    BufferedReader er = new BufferedReader(
+                        new InputStreamReader(proc.getErrorStream())
+                    )
+                ) {
+                    String l;
+                    while ((l = er.readLine()) != null) stderrBuf
+                        .append(l)
+                        .append("\n");
+                } catch (IOException ignored) {}
+            });
+            stderrThread.start();
 
             List<Document> rawBatch = new ArrayList<>(1000);
             List<Document> validBatch = new ArrayList<>(1000);
@@ -206,7 +230,23 @@ public class MongoDBPipeline {
             if (!rawBatch.isEmpty()) rawColl.insertMany(rawBatch);
             if (!validBatch.isEmpty()) validColl.insertMany(validBatch);
 
-            proc.waitFor();
+            stderrThread.join();
+            int exitCode = proc.waitFor();
+            if (exitCode != 0) {
+                throw new RuntimeException(
+                    "hdfs dfs -cat failed (exit=" +
+                        exitCode +
+                        "):\n" +
+                        stderrBuf
+                );
+            }
+            System.out.println(
+                "  → Loaded " +
+                    total +
+                    " raw records, " +
+                    valid +
+                    " valid into MongoDB."
+            );
         }
         return new int[] { total, valid };
     }

@@ -116,13 +116,13 @@ public class Main {
         int effectiveBatchId = batchId == 0 ? 1 : batchId;
         String sourceFile =
             batchId == 1
-                ? "/input/logs/access_log_Jul95"
+                ? "/input/logs/NASA_access_log_Jul95"
                 : batchId == 2
-                    ? "/input/logs/access_log_Aug95"
+                    ? "/input/logs/NASA_access_log_Aug95"
                     : "/input/logs";
 
-        // Pre-flight: verify HDFS is reachable for HDFS-based pipelines
-        if (!pipelineName.equals("MongoDB")) {
+        // Pre-flight: verify HDFS is reachable (all pipelines read logs from HDFS)
+        if (true) {
             System.out.println("\n[Preflight] Checking HDFS connectivity...");
             if (!isHdfsReachable()) {
                 System.out.println();
