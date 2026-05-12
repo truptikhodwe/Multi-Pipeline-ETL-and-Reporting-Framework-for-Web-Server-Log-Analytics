@@ -22,7 +22,7 @@ public class MongoDBPipeline {
 
     private static final String INPUT_DIR = "/input/logs";
     private static final String PIPELINE = "MongoDB";
-    private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
+    private static final String HADOOP_HOME = "/usr/local/hadoop";
     private static final String MONGO_URI = "mongodb://localhost:27017";
     private static final String MONGO_DB = "etl_logs";
     private static final String JS_BASE = "src/main/resources/mongo/";
@@ -313,7 +313,7 @@ public class MongoDBPipeline {
                 doc.getInteger("log_hour"),
                 toLong(doc, "error_request_count"),
                 toLong(doc, "total_request_count"),
-                doc.getDouble("error_rate"),
+                toDouble(doc, "error_rate"),
                 toLong(doc, "distinct_error_hosts")
             );
         }
@@ -325,6 +325,14 @@ public class MongoDBPipeline {
         if (v instanceof Long l) return l;
         if (v instanceof Double d) return d.longValue();
         return 0L;
+    }
+
+    private double toDouble(Document doc, String field) {
+        Object v = doc.get(field);
+        if (v instanceof Double d) return d;
+        if (v instanceof Integer i) return i.doubleValue();
+        if (v instanceof Long l) return l.doubleValue();
+        return 0.0;
     }
 
     private void runCommand(String command) throws Exception {

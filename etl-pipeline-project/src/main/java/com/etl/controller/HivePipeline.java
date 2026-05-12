@@ -18,8 +18,8 @@ public class HivePipeline {
 
     private static final String OUTPUT = "/output";
     private static final String PIPELINE = "Hive";
-    private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
-    private static final String HIVE_HOME = "/home/priyanshu-tiwari/hive";
+    private static final String HADOOP_HOME = "/usr/local/hadoop";
+    private static final String HIVE_HOME = "/home/siddharth-kini/hive";
     private static final String HQL_BASE = "src/main/resources/hive/";
 
     private final String queryName;
@@ -79,9 +79,7 @@ public class HivePipeline {
         int totalRecords = countRecords("/input/logs/*");
         // valid_logs is a Hive-managed ORC table stored in the Hive warehouse, not under /output.
         // Use the Hive metastore default warehouse path: /user/hive/warehouse/etl_logs.db/valid_logs
-        int validRecords = countRecords(
-            "/user/hive/warehouse/etl_logs.db/valid_logs/*"
-        );
+        int validRecords = countHiveRecords("etl_logs.valid_logs");
 
         ExecutionStats s = new ExecutionStats();
         s.totalRecords = totalRecords;
@@ -235,6 +233,40 @@ public class HivePipeline {
         return (out == null || out.isBlank())
             ? 0
             : Integer.parseInt(out.trim());
+    }
+
+    private int countHiveRecords(String table) throws Exception {
+        ProcessBuilder pb = new ProcessBuilder(
+            "bash",
+            "-c",
+            "hive -S -e 'SELECT COUNT(1) FROM " + table + ";'"
+        );
+        pb.environment().put("HADOOP_HOME", HADOOP_HOME);
+        pb.environment().put("HIVE_HOME", HIVE_HOME);
+        pb.environment().put(
+            "PATH",
+            pb.environment().get("PATH") + ":" + HADOOP_HOME + "/bin:" + HIVE_HOME + "/bin"
+        );
+        
+        Process p = pb.start();
+        String out = "";
+        
+        try (
+            BufferedReader r = new BufferedReader(
+                new InputStreamReader(p.getInputStream())
+            )
+        ) {
+            String line;
+            while ((line = r.readLine()) != null) {
+                // The -S (silent) flag might still output some warnings, 
+                // so we parse only lines containing digits.
+                if (line.trim().matches("\\d+")) {
+                    out = line.trim();
+                }
+            }
+        }
+        p.waitFor();
+        return out.isEmpty() ? 0 : Integer.parseInt(out);
     }
 
     private List<String> readHdfsLines(String hdfsPath) throws Exception {

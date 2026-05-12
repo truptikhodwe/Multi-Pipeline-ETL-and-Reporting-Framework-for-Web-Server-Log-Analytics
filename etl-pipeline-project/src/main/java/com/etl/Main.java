@@ -341,7 +341,7 @@ public class Main {
      * Returns true if HDFS is up, false if connection is refused.
      */
     private static boolean isHdfsReachable() {
-        String hadoopHome = "/home/priyanshu-tiwari/hadoop";
+        String hadoopHome = "/usr/local/hadoop";
         try {
             ProcessBuilder pb = new ProcessBuilder(
                 "bash",
