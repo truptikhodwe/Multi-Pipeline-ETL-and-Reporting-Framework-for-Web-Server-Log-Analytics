@@ -1,12 +1,12 @@
 # Multi-Pipeline ETL Framework
 
-This project is a CLI-based unified ETL reporting framework that orchestrates data processing across Apache Hadoop MapReduce, Apache Hive, Apache Pig, and MongoDB pipelines.
+This project is a CLI-based unified ETL reporting framework designed to perform data processing workflows across Apache Hadoop MapReduce, Apache Hive, Apache Pig, and MongoDB pipelines.
 
 ## ⚠️ Important Setup Instructions: Update Environment Paths
 
 If you have just cloned or pulled this project from GitHub, **you MUST update the system paths** in the Java source files to point to your local installation directories for Hadoop, Hive, and Pig. 
 
-The current code contains hardcoded absolute paths that are specific to the original developer's system. The application will fail to launch processes if these paths are not updated.
+The current code contains hard-coded absolute paths specific to the original developer's system. The application will fail to launch processes if these paths are not updated.
 
 Please locate and update the `HADOOP_HOME`, `HIVE_HOME`, and `PIG_HOME` constant string variables in the following files to match your local setup:
 
