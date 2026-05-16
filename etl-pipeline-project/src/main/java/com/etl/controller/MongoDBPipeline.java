@@ -321,17 +321,17 @@ public class MongoDBPipeline {
 
     private long toLong(Document doc, String field) {
         Object v = doc.get(field);
-        if (v instanceof Integer i) return i.longValue();
-        if (v instanceof Long l) return l;
-        if (v instanceof Double d) return d.longValue();
+        if (v instanceof Integer) return ((Integer) v).longValue();
+        if (v instanceof Long) return ((Long) v).longValue();
+        if (v instanceof Double) return ((Double) v).longValue();
         return 0L;
     }
 
     private double toDouble(Document doc, String field) {
         Object v = doc.get(field);
-        if (v instanceof Double d) return d;
-        if (v instanceof Integer i) return i.doubleValue();
-        if (v instanceof Long l) return l.doubleValue();
+        if (v instanceof Double) return ((Double) v).doubleValue();
+        if (v instanceof Integer) return ((Integer) v).doubleValue();
+        if (v instanceof Long) return ((Long) v).doubleValue();
         return 0.0;
     }
 

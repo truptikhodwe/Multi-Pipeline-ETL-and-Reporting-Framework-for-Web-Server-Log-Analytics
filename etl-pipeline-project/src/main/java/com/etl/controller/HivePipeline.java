@@ -116,7 +116,7 @@ public class HivePipeline {
     private void loadQuery1(PostgresWriter w, int runId, Timestamp ts)
         throws Exception {
         for (String line : readHdfsLines(OUTPUT + "/query1/000000_0")) {
-            if (line.isBlank()) continue;
+            if (line.trim().isEmpty()) continue;
             String[] p = line.split("\t", -1);
             if (p.length < 5) continue;
             w.insertQuery1(
@@ -135,7 +135,7 @@ public class HivePipeline {
     private void loadQuery2(PostgresWriter w, int runId, Timestamp ts)
         throws Exception {
         for (String line : readHdfsLines(OUTPUT + "/query2/000000_0")) {
-            if (line.isBlank()) continue;
+            if (line.trim().isEmpty()) continue;
             String[] p = line.split("\t", -1);
             if (p.length < 5) continue;
             w.insertQuery2(
@@ -154,7 +154,7 @@ public class HivePipeline {
     private void loadQuery3(PostgresWriter w, int runId, Timestamp ts)
         throws Exception {
         for (String line : readHdfsLines(OUTPUT + "/query3/000000_0")) {
-            if (line.isBlank()) continue;
+            if (line.trim().isEmpty()) continue;
             String[] p = line.split("\t", -1);
             if (p.length < 7) continue;
             w.insertQuery3(
@@ -230,7 +230,7 @@ public class HivePipeline {
             out = r.readLine();
         }
         p.waitFor();
-        return (out == null || out.isBlank())
+        return (out == null || out.trim().isEmpty())
             ? 0
             : Integer.parseInt(out.trim());
     }

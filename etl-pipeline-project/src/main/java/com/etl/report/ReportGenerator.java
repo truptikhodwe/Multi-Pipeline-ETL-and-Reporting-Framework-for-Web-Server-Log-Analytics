@@ -66,7 +66,7 @@ public class ReportGenerator {
                         sb.append("\n  -- Query 1: Daily Traffic Summary (first 10 rows) --\n");
                         sb.append(String.format("  %-14s %-8s %14s %14s%n",
                             "Date", "Status", "Requests", "Total Bytes"));
-                        sb.append("  " + "-".repeat(54) + "\n");
+                        sb.append("  " + repeatChar('-', 54) + "\n");
                         hasRows = true;
                     }
                     sb.append(String.format("  %-14s %-8d %14d %14d%n",
@@ -90,7 +90,7 @@ public class ReportGenerator {
                         sb.append("\n  -- Query 2: Top Requested Resources (first 10) ----\n");
                         sb.append(String.format("  %-40s %10s %12s %8s%n",
                             "Resource", "Requests", "Bytes", "Hosts"));
-                        sb.append("  " + "-".repeat(74) + "\n");
+                        sb.append("  " + repeatChar('-', 74) + "\n");
                         hasRows = true;
                     }
                     String path = rs.getString("resource_path");
@@ -117,7 +117,7 @@ public class ReportGenerator {
                         sb.append("\n  -- Query 3: Hourly Error Analysis (first 10 rows) --\n");
                         sb.append(String.format("  %-14s %5s %8s %8s %10s %8s%n",
                             "Date", "Hour", "Errors", "Total", "Error%", "Hosts"));
-                        sb.append("  " + "-".repeat(58) + "\n");
+                        sb.append("  " + repeatChar('-', 58) + "\n");
                         hasRows = true;
                     }
                     sb.append(String.format("  %-14s %5d %8d %8d %9.2f%% %8d%n",
@@ -133,5 +133,17 @@ public class ReportGenerator {
         System.out.println("======================================================");
         System.out.println("  Report complete.");
         System.out.println("======================================================");
+    }
+
+    /**
+     * Returns a string consisting of the given character repeated n times.
+     * Replacement for String.repeat() which requires Java 11+.
+     */
+    private static String repeatChar(char c, int count) {
+        StringBuilder sb = new StringBuilder(count);
+        for (int i = 0; i < count; i++) {
+            sb.append(c);
+        }
+        return sb.toString();
     }
 }

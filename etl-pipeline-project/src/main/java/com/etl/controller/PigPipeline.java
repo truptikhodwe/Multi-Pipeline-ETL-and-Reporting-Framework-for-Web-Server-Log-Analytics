@@ -4,8 +4,6 @@ import com.etl.db.PostgresWriter;
 import com.etl.model.ExecutionStats;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +22,8 @@ public class PigPipeline {
     private static final String OUTPUT = "/output";
 
     // ── Environment paths ───────────────────────────────────────────────────
-    private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
-    private static final String PIG_HOME = HADOOP_HOME + "/pig-0.18.0";
+    private static final String HADOOP_HOME = "/usr/local/hadoop";
+    private static final String PIG_HOME = "/usr/local/pig";
     private static final String JAR_PATH = "target/etl-pipeline-1.0.jar";
 
     // ── Pipeline identity ───────────────────────────────────────────────────
@@ -101,17 +99,29 @@ public class PigPipeline {
     public void loadResultsToPostgres(int runId) throws Exception {
         Timestamp executedAt = new Timestamp(System.currentTimeMillis());
 
-        try (PostgresWriter writer = new PostgresWriter()) {
+        PostgresWriter writer = null;
+        try {
+            writer = new PostgresWriter();
             switch (queryName) {
-                case "Query1" -> loadQuery1(writer, runId, executedAt);
-                case "Query2" -> loadQuery2(writer, runId, executedAt);
-                case "Query3" -> loadQuery3(writer, runId, executedAt);
-                default -> {
+                case "Query1":
+                    loadQuery1(writer, runId, executedAt);
+                    break;
+                case "Query2":
+                    loadQuery2(writer, runId, executedAt);
+                    break;
+                case "Query3":
+                    loadQuery3(writer, runId, executedAt);
+                    break;
+                default:
                     // "All"
                     loadQuery1(writer, runId, executedAt);
                     loadQuery2(writer, runId, executedAt);
                     loadQuery3(writer, runId, executedAt);
-                }
+                    break;
+            }
+        } finally {
+            if (writer != null) {
+                writer.close();
             }
         }
     }
@@ -146,10 +156,18 @@ public class PigPipeline {
         String base = "src/main/resources/pig/";
 
         switch (queryName) {
-            case "Query1" -> scripts.add(base + "query1.pig");
-            case "Query2" -> scripts.add(base + "query2.pig");
-            case "Query3" -> scripts.add(base + "query3.pig");
-            default -> scripts.add(base + "etl.pig"); // "All" → combined script
+            case "Query1":
+                scripts.add(base + "query1.pig");
+                break;
+            case "Query2":
+                scripts.add(base + "query2.pig");
+                break;
+            case "Query3":
+                scripts.add(base + "query3.pig");
+                break;
+            default:
+                scripts.add(base + "etl.pig"); // "All" → combined script
+                break;
         }
         return scripts;
     }
@@ -263,7 +281,7 @@ public class PigPipeline {
             "Count command failed: " + cmd
         );
 
-        return (output == null || output.isBlank())
+        return (output == null || output.trim().isEmpty())
             ? 0
             : Integer.parseInt(output.trim());
     }
@@ -276,7 +294,7 @@ public class PigPipeline {
         Timestamp executedAt
     ) throws Exception {
         for (String line : readHdfsLines(OUTPUT + "/query1/part-*")) {
-            if (line == null || line.isBlank()) continue;
+            if (line == null || line.trim().isEmpty()) continue;
 
             String[] p = line.split("\t", -1);
             if (p.length != 5) {
@@ -303,7 +321,7 @@ public class PigPipeline {
         Timestamp executedAt
     ) throws Exception {
         for (String line : readHdfsLines(OUTPUT + "/query2/part-*")) {
-            if (line == null || line.isBlank()) continue;
+            if (line == null || line.trim().isEmpty()) continue;
 
             String[] p = line.split("\t", -1);
             if (p.length != 5) {
@@ -330,7 +348,7 @@ public class PigPipeline {
         Timestamp executedAt
     ) throws Exception {
         for (String line : readHdfsLines(OUTPUT + "/query3/part-*")) {
-            if (line == null || line.isBlank()) continue;
+            if (line == null || line.trim().isEmpty()) continue;
 
             String[] p = line.split("\t", -1);
             if (p.length != 7) {

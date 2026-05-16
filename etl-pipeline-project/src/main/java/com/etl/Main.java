@@ -44,12 +44,13 @@ public class Main {
         System.out.print("Enter choice [1-4]: ");
         int pipelineChoice = readInt(sc, 1, 4);
 
-        String pipelineName = switch (pipelineChoice) {
-            case 1 -> "Pig";
-            case 2 -> "MapReduce";
-            case 3 -> "Hive";
-            default -> "MongoDB";
-        };
+        String pipelineName;
+        switch (pipelineChoice) {
+            case 1:  pipelineName = "Pig"; break;
+            case 2:  pipelineName = "MapReduce"; break;
+            case 3:  pipelineName = "Hive"; break;
+            default: pipelineName = "MongoDB"; break;
+        }
         System.out.println("→ Pipeline: " + pipelineName + "\n");
 
         // ── Step 2: Query ─────────────────────────────────────────────────────
@@ -63,12 +64,14 @@ public class Main {
         System.out.println("└─────────────────────────────────────────────┘");
         System.out.print("Enter choice [1-4]: ");
         int queryChoice = readInt(sc, 1, 4);
-        String queryName = switch (queryChoice) {
-            case 1 -> "Query1";
-            case 2 -> "Query2";
-            case 3 -> "Query3";
-            default -> "All";
-        };
+
+        String queryName;
+        switch (queryChoice) {
+            case 1:  queryName = "Query1"; break;
+            case 2:  queryName = "Query2"; break;
+            case 3:  queryName = "Query3"; break;
+            default: queryName = "All"; break;
+        }
         System.out.println("→ Query: " + queryName + "\n");
 
         // ── Step 3: Batch ─────────────────────────────────────────────────────
@@ -97,12 +100,12 @@ public class Main {
         System.out.println("→ Batch size: " + batchSize + "\n");
 
         // ── Confirm ───────────────────────────────────────────────────────────
-        System.out.println("─".repeat(48));
+        System.out.println(repeatChar('-', 48));
         System.out.printf("  Pipeline : %s%n", pipelineName);
         System.out.printf("  Query    : %s%n", queryName);
         System.out.printf("  Batch    : %s%n", batchLabel);
         System.out.printf("  Batch Sz : %d%n", batchSize);
-        System.out.println("─".repeat(48));
+        System.out.println(repeatChar('-', 48));
         System.out.print("Proceed? [Y/n]: ");
         String confirm = sc.nextLine().trim();
         if (!confirm.isEmpty() && !confirm.equalsIgnoreCase("y")) {
@@ -151,103 +154,98 @@ public class Main {
 
         System.out.println("\n[1/4] Running " + pipelineName + " pipeline...");
         try {
-            switch (pipelineName) {
-                case "Pig" -> {
-                    PigPipeline pig = new PigPipeline(
-                        queryName,
-                        batchSize,
-                        batchId
-                    );
-                    stats = pig.run();
-                    System.out.println("\n[2/4] Copying HDFS output...");
-                    pig.copyOutput();
-                    System.out.println(
-                        "\n[3/4] Loading results into PostgreSQL..."
-                    );
-                    runId = insertRunMeta(
-                        pipelineName,
-                        queryName,
-                        effectiveBatchId,
-                        batchSize,
-                        stats,
-                        batchLabel,
-                        sourceFile
-                    );
-                    pig.loadResultsToPostgres(runId);
-                }
-                case "MapReduce" -> {
-                    MapReducePipeline mr = new MapReducePipeline(
-                        queryName,
-                        batchSize,
-                        batchId
-                    );
-                    stats = mr.run();
-                    System.out.println(
-                        "\n[2/4] Skipping local copy (results read from HDFS)..."
-                    );
-                    System.out.println(
-                        "\n[3/4] Loading results into PostgreSQL..."
-                    );
-                    runId = insertRunMeta(
-                        pipelineName,
-                        queryName,
-                        effectiveBatchId,
-                        batchSize,
-                        stats,
-                        batchLabel,
-                        sourceFile
-                    );
-                    mr.loadResultsToPostgres(runId);
-                }
-                case "Hive" -> {
-                    HivePipeline hive = new HivePipeline(
-                        queryName,
-                        batchSize,
-                        batchId
-                    );
-                    stats = hive.run();
-                    System.out.println(
-                        "\n[2/4] Skipping local copy (results read from HDFS)..."
-                    );
-                    System.out.println(
-                        "\n[3/4] Loading results into PostgreSQL..."
-                    );
-                    runId = insertRunMeta(
-                        pipelineName,
-                        queryName,
-                        effectiveBatchId,
-                        batchSize,
-                        stats,
-                        batchLabel,
-                        sourceFile
-                    );
-                    hive.loadResultsToPostgres(runId);
-                }
-                default -> {
-                    // MongoDB
-                    MongoDBPipeline mongo = new MongoDBPipeline(
-                        queryName,
-                        batchSize,
-                        batchId
-                    );
-                    stats = mongo.run();
-                    System.out.println(
-                        "\n[2/4] Results stored in MongoDB collections..."
-                    );
-                    System.out.println(
-                        "\n[3/4] Loading results into PostgreSQL..."
-                    );
-                    runId = insertRunMeta(
-                        pipelineName,
-                        queryName,
-                        effectiveBatchId,
-                        batchSize,
-                        stats,
-                        batchLabel,
-                        sourceFile
-                    );
-                    mongo.loadResultsToPostgres(runId);
-                }
+            if ("Pig".equals(pipelineName)) {
+                PigPipeline pig = new PigPipeline(
+                    queryName,
+                    batchSize,
+                    batchId
+                );
+                stats = pig.run();
+                System.out.println("\n[2/4] Copying HDFS output...");
+                pig.copyOutput();
+                System.out.println(
+                    "\n[3/4] Loading results into PostgreSQL..."
+                );
+                runId = insertRunMeta(
+                    pipelineName,
+                    queryName,
+                    effectiveBatchId,
+                    batchSize,
+                    stats,
+                    batchLabel,
+                    sourceFile
+                );
+                pig.loadResultsToPostgres(runId);
+            } else if ("MapReduce".equals(pipelineName)) {
+                MapReducePipeline mr = new MapReducePipeline(
+                    queryName,
+                    batchSize,
+                    batchId
+                );
+                stats = mr.run();
+                System.out.println(
+                    "\n[2/4] Skipping local copy (results read from HDFS)..."
+                );
+                System.out.println(
+                    "\n[3/4] Loading results into PostgreSQL..."
+                );
+                runId = insertRunMeta(
+                    pipelineName,
+                    queryName,
+                    effectiveBatchId,
+                    batchSize,
+                    stats,
+                    batchLabel,
+                    sourceFile
+                );
+                mr.loadResultsToPostgres(runId);
+            } else if ("Hive".equals(pipelineName)) {
+                HivePipeline hive = new HivePipeline(
+                    queryName,
+                    batchSize,
+                    batchId
+                );
+                stats = hive.run();
+                System.out.println(
+                    "\n[2/4] Skipping local copy (results read from HDFS)..."
+                );
+                System.out.println(
+                    "\n[3/4] Loading results into PostgreSQL..."
+                );
+                runId = insertRunMeta(
+                    pipelineName,
+                    queryName,
+                    effectiveBatchId,
+                    batchSize,
+                    stats,
+                    batchLabel,
+                    sourceFile
+                );
+                hive.loadResultsToPostgres(runId);
+            } else {
+                // MongoDB
+                MongoDBPipeline mongo = new MongoDBPipeline(
+                    queryName,
+                    batchSize,
+                    batchId
+                );
+                stats = mongo.run();
+                System.out.println(
+                    "\n[2/4] Results stored in MongoDB collections..."
+                );
+                System.out.println(
+                    "\n[3/4] Loading results into PostgreSQL..."
+                );
+                runId = insertRunMeta(
+                    pipelineName,
+                    queryName,
+                    effectiveBatchId,
+                    batchSize,
+                    stats,
+                    batchLabel,
+                    sourceFile
+                );
+                mongo.loadResultsToPostgres(runId);
             }
         } catch (Exception ex) {
             System.err.println("\n[ERROR] Pipeline execution failed:");
@@ -260,14 +258,18 @@ public class Main {
 
         // ── Step 6: Report ────────────────────────────────────────────────────
         System.out.println("\n[4/4] Generating report...");
-        try (
-            Connection conn = DriverManager.getConnection(
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(
                 PG_URL,
                 PG_USER,
                 PG_PASS
-            )
-        ) {
+            );
             ReportGenerator.printReport(runId, conn);
+        } finally {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
         }
     }
 
@@ -282,7 +284,9 @@ public class Main {
         String batchLabel,
         String sourceFile
     ) throws Exception {
-        try (PostgresWriter w = new PostgresWriter()) {
+        PostgresWriter w = null;
+        try {
+            w = new PostgresWriter();
             int runId = w.insertRun(
                 pipeline,
                 query,
@@ -308,17 +312,19 @@ public class Main {
             );
             System.out.println("  → Run ID: " + runId);
             return runId;
+        } finally {
+            if (w != null) {
+                w.close();
+            }
         }
     }
 
     private static void printBanner() {
         System.out.println(
-            """
-            ╔══════════════════════════════════════════════════════╗
-            ║       Multi-Pipeline ETL & Reporting Framework       ║
-            ║           End Semester Project – NoSQL Systems       ║
-            ╚══════════════════════════════════════════════════════╝
-            """
+            "╔══════════════════════════════════════════════════════╗\n" +
+            "║       Multi-Pipeline ETL & Reporting Framework       ║\n" +
+            "║           End Semester Project – NoSQL Systems       ║\n" +
+            "╚══════════════════════════════════════════════════════╝\n"
         );
     }
 
@@ -334,6 +340,18 @@ public class Main {
                 max
             );
         }
+    }
+
+    /**
+     * Returns a string consisting of the given character repeated n times.
+     * Replacement for String.repeat() which requires Java 11+.
+     */
+    private static String repeatChar(char c, int count) {
+        StringBuilder sb = new StringBuilder(count);
+        for (int i = 0; i < count; i++) {
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     /**
