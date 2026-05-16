@@ -18,8 +18,8 @@ public class HivePipeline {
 
     private static final String OUTPUT = "/output";
     private static final String PIPELINE = "Hive";
-    private static final String HADOOP_HOME = "/usr/local/hadoop";
-    private static final String HIVE_HOME = "/home/siddharth-kini/hive";
+    private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
+    private static final String HIVE_HOME = "/home/priyanshu-tiwari/hive";
     private static final String HQL_BASE = "src/main/resources/hive/";
 
     private final String queryName;

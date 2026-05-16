@@ -17,7 +17,7 @@ public class MapReducePipeline {
     private static final String INPUT = "/input/logs";
     private static final String OUTPUT = "/output";
     private static final String PIPELINE = "MapReduce";
-    private static final String HADOOP_HOME = "/usr/local/hadoop";
+    private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
     private static final String JAR_PATH = "target/etl-pipeline-1.0.jar"; // fat JAR for HADOOP_CLASSPATH
     private static final String MR_JAR_PATH = "target/etl-pipeline-mr.jar"; // no Main-Class, used for hadoop jar
 

@@ -22,8 +22,8 @@ public class PigPipeline {
     private static final String OUTPUT = "/output";
 
     // ── Environment paths ───────────────────────────────────────────────────
-    private static final String HADOOP_HOME = "/usr/local/hadoop";
-    private static final String PIG_HOME = "/usr/local/pig";
+    private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
+    private static final String PIG_HOME = "/home/priyanshu-tiwari/hadoop/pig-0.18.0";
     private static final String JAR_PATH = "target/etl-pipeline-1.0.jar";
 
     // ── Pipeline identity ───────────────────────────────────────────────────

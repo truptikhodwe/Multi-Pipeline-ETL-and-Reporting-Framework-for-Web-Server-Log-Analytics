@@ -22,7 +22,7 @@ public class MongoDBPipeline {
 
     private static final String INPUT_DIR = "/input/logs";
     private static final String PIPELINE = "MongoDB";
-    private static final String HADOOP_HOME = "/usr/local/hadoop";
+    private static final String HADOOP_HOME = "/home/priyanshu-tiwari/hadoop";
     private static final String MONGO_URI = "mongodb://localhost:27017";
     private static final String MONGO_DB = "etl_logs";
     private static final String JS_BASE = "src/main/resources/mongo/";

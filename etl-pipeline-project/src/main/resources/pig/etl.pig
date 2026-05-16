@@ -6,16 +6,14 @@
 -- LOAD
 --------------------------------------------------
 
-raw_logs = LOAD '$INPUT' USING TextLoader() AS (line:chararray);
+raw_logs = LOAD '$INPUT' USING PigStorage('\u0001', '-tagFile') AS (filename:chararray, line:chararray);
 
 --------------------------------------------------
--- ASSIGNING SEQUENTIAL RECORD NUMBER AND BATCH ID
+-- ASSIGNING BATCH ID
 --------------------------------------------------
 
-ranked_logs = RANK raw_logs;
-
-logs = FOREACH ranked_logs GENERATE
-    (int)(FLOOR((rank_raw_logs - 1) / (double)$BATCH_SIZE) + 1) AS batch_id,
+logs = FOREACH raw_logs GENERATE
+    (filename MATCHES '.*Aug.*' ? 2 : 1) AS batch_id,
     line AS line;
 
 --------------------------------------------------
