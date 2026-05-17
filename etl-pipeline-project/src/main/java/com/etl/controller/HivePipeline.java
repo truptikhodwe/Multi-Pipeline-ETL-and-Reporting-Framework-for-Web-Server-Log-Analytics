@@ -23,12 +23,10 @@ public class HivePipeline {
     private static final String HQL_BASE = "src/main/resources/hive/";
 
     private final String queryName;
-    private final int batchSize;
     private final int batchId;
 
-    public HivePipeline(String queryName, int batchSize, int batchId) {
+    public HivePipeline(String queryName, int batchId) {
         this.queryName = queryName;
-        this.batchSize = batchSize;
         this.batchId = batchId;
     }
 
@@ -38,10 +36,6 @@ public class HivePipeline {
 
     public String getQueryName() {
         return queryName;
-    }
-
-    public int getBatchSize() {
-        return batchSize;
     }
 
     public int getBatchId() {
@@ -84,10 +78,7 @@ public class HivePipeline {
         ExecutionStats s = new ExecutionStats();
         s.totalRecords = totalRecords;
         s.malformedRecords = totalRecords - validRecords;
-        s.totalBatches =
-            totalRecords == 0
-                ? 0
-                : (int) Math.ceil((double) totalRecords / batchSize);
+        s.totalBatches = (batchId == 0) ? 2 : 1;
         s.avgBatchSize =
             s.totalBatches == 0 ? 0.0 : (double) totalRecords / s.totalBatches;
         s.runtime = System.currentTimeMillis() - start;

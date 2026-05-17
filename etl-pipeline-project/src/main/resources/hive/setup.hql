@@ -1,7 +1,5 @@
--- ============================================================
 -- Hive Setup – External table with RegexSerDe for Apache logs
 -- Run once before executing any query scripts
--- ============================================================
 
 CREATE DATABASE IF NOT EXISTS etl_logs;
 USE etl_logs;

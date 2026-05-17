@@ -93,18 +93,13 @@ public class Main {
                     : "Combined";
         System.out.println("→ Batch: " + batchLabel + "\n");
 
-        // ── Step 4: Batch size ────────────────────────────────────────────────
-        System.out.print("Enter batch size [default: 1000]: ");
-        String bsRaw = sc.nextLine().trim();
-        int batchSize = bsRaw.isEmpty() ? 1000 : Integer.parseInt(bsRaw);
-        System.out.println("→ Batch size: " + batchSize + "\n");
+
 
         // ── Confirm ───────────────────────────────────────────────────────────
         System.out.println(repeatChar('-', 48));
         System.out.printf("  Pipeline : %s%n", pipelineName);
         System.out.printf("  Query    : %s%n", queryName);
         System.out.printf("  Batch    : %s%n", batchLabel);
-        System.out.printf("  Batch Sz : %d%n", batchSize);
         System.out.println(repeatChar('-', 48));
         System.out.print("Proceed? [Y/n]: ");
         String confirm = sc.nextLine().trim();
@@ -157,7 +152,6 @@ public class Main {
             if ("Pig".equals(pipelineName)) {
                 PigPipeline pig = new PigPipeline(
                     queryName,
-                    batchSize,
                     batchId
                 );
                 stats = pig.run();
@@ -170,7 +164,7 @@ public class Main {
                     pipelineName,
                     queryName,
                     effectiveBatchId,
-                    batchSize,
+                    0,
                     stats,
                     batchLabel,
                     sourceFile
@@ -179,7 +173,6 @@ public class Main {
             } else if ("MapReduce".equals(pipelineName)) {
                 MapReducePipeline mr = new MapReducePipeline(
                     queryName,
-                    batchSize,
                     batchId
                 );
                 stats = mr.run();
@@ -193,7 +186,7 @@ public class Main {
                     pipelineName,
                     queryName,
                     effectiveBatchId,
-                    batchSize,
+                    0,
                     stats,
                     batchLabel,
                     sourceFile
@@ -202,7 +195,6 @@ public class Main {
             } else if ("Hive".equals(pipelineName)) {
                 HivePipeline hive = new HivePipeline(
                     queryName,
-                    batchSize,
                     batchId
                 );
                 stats = hive.run();
@@ -216,7 +208,7 @@ public class Main {
                     pipelineName,
                     queryName,
                     effectiveBatchId,
-                    batchSize,
+                    0,
                     stats,
                     batchLabel,
                     sourceFile
@@ -226,7 +218,6 @@ public class Main {
                 // MongoDB
                 MongoDBPipeline mongo = new MongoDBPipeline(
                     queryName,
-                    batchSize,
                     batchId
                 );
                 stats = mongo.run();
@@ -240,7 +231,7 @@ public class Main {
                     pipelineName,
                     queryName,
                     effectiveBatchId,
-                    batchSize,
+                    0,
                     stats,
                     batchLabel,
                     sourceFile

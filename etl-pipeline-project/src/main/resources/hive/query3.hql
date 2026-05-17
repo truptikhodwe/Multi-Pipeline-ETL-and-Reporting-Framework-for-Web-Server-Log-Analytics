@@ -2,6 +2,7 @@ USE etl_logs;
 
 -- Query 3: Hourly Error Analysis
 -- Output: batch_id, log_date, log_hour, error_count, total_count, error_rate, distinct_error_hosts
+
 INSERT OVERWRITE DIRECTORY '/output/query3'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 SELECT

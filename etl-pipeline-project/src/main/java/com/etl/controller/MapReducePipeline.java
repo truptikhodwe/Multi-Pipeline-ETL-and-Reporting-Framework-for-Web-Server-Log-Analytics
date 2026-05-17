@@ -22,12 +22,10 @@ public class MapReducePipeline {
     private static final String MR_JAR_PATH = "target/etl-pipeline-mr.jar"; // no Main-Class, used for hadoop jar
 
     private final String queryName;
-    private final int batchSize;
     private final int batchId;
 
-    public MapReducePipeline(String queryName, int batchSize, int batchId) {
+    public MapReducePipeline(String queryName, int batchId) {
         this.queryName = queryName;
-        this.batchSize = batchSize;
         this.batchId = batchId;
     }
 
@@ -37,10 +35,6 @@ public class MapReducePipeline {
 
     public String getQueryName() {
         return queryName;
-    }
-
-    public int getBatchSize() {
-        return batchSize;
     }
 
     public int getBatchId() {
@@ -86,10 +80,7 @@ public class MapReducePipeline {
 
         int validRecords = countRecords(OUTPUT + "/valid_logs/*");
         int malformed = totalRecords - validRecords;
-        int totalBatches =
-            totalRecords == 0
-                ? 0
-                : (int) Math.ceil((double) totalRecords / batchSize);
+        int totalBatches = (batchId == 0) ? 2 : 1;
         double avgBatch =
             totalBatches == 0 ? 0.0 : (double) totalRecords / totalBatches;
 

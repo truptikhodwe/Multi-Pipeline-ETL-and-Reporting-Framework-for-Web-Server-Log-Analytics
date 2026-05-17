@@ -31,12 +31,10 @@ public class PigPipeline {
 
     // ── CLI-driven parameters ───────────────────────────────────────────────
     private final String queryName; // "Query1" | "Query2" | "Query3" | "All"
-    private final int batchSize; // configured batch size (e.g. 1000)
     private final int batchId; // 1 = July, 2 = August (or 0 = combined)
 
-    public PigPipeline(String queryName, int batchSize, int batchId) {
+    public PigPipeline(String queryName, int batchId) {
         this.queryName = queryName;
-        this.batchSize = batchSize;
         this.batchId = batchId;
     }
 
@@ -48,9 +46,7 @@ public class PigPipeline {
         return queryName;
     }
 
-    public int getBatchSize() {
-        return batchSize;
-    }
+
 
     public int getBatchId() {
         return batchId;
@@ -81,9 +77,7 @@ public class PigPipeline {
         // Gather stats
         stats.totalRecords = totalRecords;
         stats.malformedRecords = totalRecords - countValidRecords();
-        stats.totalBatches = (totalRecords == 0)
-            ? 0
-            : (int) Math.ceil((double) totalRecords / batchSize);
+        stats.totalBatches = (batchId == 0) ? 2 : 1;
         stats.avgBatchSize = (stats.totalBatches == 0)
             ? 0.0
             : (double) stats.totalRecords / stats.totalBatches;
@@ -179,8 +173,6 @@ public class PigPipeline {
             INPUT +
             " -param OUTPUT=" +
             OUTPUT +
-            " -param BATCH_SIZE=" +
-            batchSize +
             " " +
             scriptPath;
         runCommand(cmd);

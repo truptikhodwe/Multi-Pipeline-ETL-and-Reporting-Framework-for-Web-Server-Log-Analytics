@@ -26,7 +26,7 @@ public class ReportGenerator {
                     System.out.printf("  Pipeline          : %s%n", rs.getString("pipeline_name"));
                     System.out.printf("  Query             : %s%n", rs.getString("query_name"));
                     System.out.printf("  Batch ID          : %d%n", rs.getInt("batch_id"));
-                    System.out.printf("  Batch Size        : %d%n", rs.getInt("batch_size"));
+
                     System.out.printf("  Avg Batch Size    : %.2f%n", rs.getDouble("avg_batch_size"));
                     System.out.printf("  Records Processed : %d%n", rs.getInt("records_processed"));
                     System.out.printf("  Malformed Records : %d%n", rs.getInt("malformed_record_count"));

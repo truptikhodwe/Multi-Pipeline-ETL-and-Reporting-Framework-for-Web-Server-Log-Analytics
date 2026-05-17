@@ -33,12 +33,10 @@ public class MongoDBPipeline {
     );
 
     private final String queryName;
-    private final int batchSize;
     private final int batchId;
 
-    public MongoDBPipeline(String queryName, int batchSize, int batchId) {
+    public MongoDBPipeline(String queryName, int batchId) {
         this.queryName = queryName;
-        this.batchSize = batchSize;
         this.batchId = batchId;
     }
 
@@ -48,10 +46,6 @@ public class MongoDBPipeline {
 
     public String getQueryName() {
         return queryName;
-    }
-
-    public int getBatchSize() {
-        return batchSize;
     }
 
     public int getBatchId() {
@@ -77,10 +71,7 @@ public class MongoDBPipeline {
             JS_BASE + "query3.js"
         );
 
-        int totalBatches =
-            totalRecords == 0
-                ? 0
-                : (int) Math.ceil((double) totalRecords / batchSize);
+        int totalBatches = (batchId == 0) ? 2 : 1;
         double avgBatch =
             totalBatches == 0 ? 0.0 : (double) totalRecords / totalBatches;
 
