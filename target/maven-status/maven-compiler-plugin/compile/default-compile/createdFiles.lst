@@ -1,0 +1,17 @@
+com/etl/controller/HivePipeline.class
+com/etl/mapreduce/Query1Reducer.class
+com/etl/mapreduce/Query1Mapper.class
+com/etl/mapreduce/Query3Mapper.class
+com/etl/mapreduce/Query2Mapper.class
+com/etl/report/ReportGenerator.class
+com/etl/Main.class
+com/etl/controller/MapReducePipeline.class
+com/etl/mapreduce/CleanerReducer.class
+com/etl/mapreduce/HadoopRunner.class
+com/etl/mapreduce/CleanerMapper.class
+com/etl/controller/MongoDBPipeline.class
+com/etl/db/PostgresWriter.class
+com/etl/mapreduce/Query2Reducer.class
+com/etl/mapreduce/Query3Reducer.class
+com/etl/model/ExecutionStats.class
+com/etl/controller/PigPipeline.class

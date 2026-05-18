@@ -1,9 +1,0 @@
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/util/LoggerUtil.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/parser/LogParser.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/Main.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/controller/MongoPipeline.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/report/ReportGenerator.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/db/PostgresWriter.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/model/LogRecord.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/model/ExecutionStats.java
-/home/trupti/Nosql_Project/mongodb-pipeline/src/main/java/com/etl/util/BatchReader.java
